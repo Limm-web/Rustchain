@@ -64,3 +64,27 @@ class TestWalletSendFractionalAmount:
         )
         assert result.exit_code == 0, result.output
         assert recording_seams == [("send", "dummy-from", "dummy-to", 1.0, 1.0)]
+
+
+class TestNodeAndEpochGrammar:
+    """#8565 — both the bare command and the documented subcommand must work."""
+
+    def test_node_status_subcommand(self, recording_seams):
+        result = CliRunner().invoke(cli.main, ["node", "status"])
+        assert result.exit_code == 0, result.output
+        assert recording_seams[0][0] == "node"
+
+    def test_node_bare_command(self, recording_seams):
+        result = CliRunner().invoke(cli.main, ["node"])
+        assert result.exit_code == 0, result.output
+        assert recording_seams[0][0] == "node"
+
+    def test_epoch_info_subcommand(self, recording_seams):
+        result = CliRunner().invoke(cli.main, ["epoch", "info"])
+        assert result.exit_code == 0, result.output
+        assert recording_seams[0][0] == "epoch"
+
+    def test_epoch_bare_command(self, recording_seams):
+        result = CliRunner().invoke(cli.main, ["epoch"])
+        assert result.exit_code == 0, result.output
+        assert recording_seams[0][0] == "epoch"
